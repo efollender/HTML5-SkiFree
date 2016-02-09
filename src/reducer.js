@@ -7,6 +7,8 @@ const {
     moveDown,
     moveLeft,
     moveRight,
+    startGame,
+    updateTrees,
     INITIAL_STATE
   } = actions;
 
@@ -23,6 +25,12 @@ export default function reducer(state=INITIAL_STATE, action) {
       break;
     case ui.MOVE_RIGHT:
       return moveRight(state);
+      break;
+    case ui.START_GAME:
+      return startGame(state);
+      break;
+    case ui.UPDATE_TREES:
+      return updateTrees(state);
       break;
   }
   return state;

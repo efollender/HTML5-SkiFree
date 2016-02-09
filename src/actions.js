@@ -24,7 +24,9 @@ export const INITIAL_STATE = Map({
 		}),
 		trees: List(),
 		stats: Map({
-			points: 0
+			points: 0,
+			moving: false,
+			clock: Date.now()
 		}),
 		settings: Map({
 			gravity: -9.8
@@ -56,5 +58,38 @@ export function moveRight(state) {
 export function moveDown(state) {
 	return state.updateIn(['game', 'skier', 'position'], oldPosition => {
 		return 'down';
+	});
+}
+
+export function startGame(state) {
+	return state.updateIn(['game', 'stats'], oldStats => {
+		return oldStats.merge(fromJS({
+			moving: true,
+			clock: Date.now()
+		}));
+	});
+}
+
+export function updateTrees(state) {
+	return state.updateIn(['game', 'trees'], oldTrees => {
+		return oldTrees.map(tree => {
+			const direction = state.getIn(['game', 'skier', 'position']);
+			let newX;
+			switch (direction) {
+				case 'right':
+					newX = tree.get('x') - 1;
+					break;
+				case 'left':
+					newX = tree.get('x') + 1;
+					break;
+				default:
+					newX = tree.get('x');
+					break;
+			}
+			return Map({
+				x: newX,
+				y: tree.get('y') - 1
+			});
+		});
 	});
 }

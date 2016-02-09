@@ -24,3 +24,15 @@ export function moveDown() {
 		type: ui.MOVE_DOWN
 	};
 }
+
+export function startGame() {
+	return {
+		type: ui.START_GAME
+	};
+}
+
+export function updateTrees() {
+	return {
+		type: ui.UPDATE_TREES
+	};
+}
