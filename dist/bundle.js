@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "832329c802deb68b4684"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "ecd90929ca7dbcb435dc"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -40622,16 +40622,16 @@
 	      var skier = this.props.status.toJS();
 	      switch (skier.position) {
 	        case 'down':
-	          return '../assets/player_down.png';
+	          return 'assets/player_down.png';
 	          break;
 	        case 'left':
-	          return '../assets/player_side.png';
+	          return 'assets/player_side.png';
 	          break;
 	        case 'right':
-	          return '../assets/player_side.png';
+	          return 'assets/player_side.png';
 	          break;
 	      }
-	      return '../assets/player_side.png';
+	      return 'assets/player_side.png';
 	    }
 	  }, {
 	    key: 'render',
