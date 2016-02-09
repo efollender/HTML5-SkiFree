@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "ecd90929ca7dbcb435dc"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "85cb9bed59323b063ea2"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -40768,7 +40768,7 @@
 				return _react2.default.createElement(
 					'div',
 					{ className: _Game2.default.Tree, style: styles },
-					_react2.default.createElement('img', { src: '../assets/tree.png' })
+					_react2.default.createElement('img', { src: 'assets/tree.png' })
 				);
 			}
 		}]);
