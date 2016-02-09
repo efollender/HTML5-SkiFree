@@ -11,7 +11,7 @@ export default class Tree extends Component {
 		};
 		return (
 			<div className={StyleSheet.Tree} style={styles}>
-				<img src='../assets/tree.png'/>
+				<img src='assets/tree.png'/>
 			</div>
 		);
 	}
