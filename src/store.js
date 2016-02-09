@@ -7,5 +7,5 @@ const createStoreWithMiddleware = applyMiddleware(
 	thunk
 	)(createStore);
 
-export const store = createStoreWithMiddleware(reducer);
+export const store = createStore(reducer);
 

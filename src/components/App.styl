@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,100');
 @import 'nib'
 
 *
@@ -9,25 +8,11 @@
 body
 	margin 0
 	padding 0
-.header
-	display flex
-	align-items center
-	padding 0 2em
-	color lighten(#B14DA9, 10)
-	.logo
-		text-transform uppercase
-		font-size 2.5em
-		flex 1 0 25%
-	.current
-		flex 1 0 50%
-	.search
-		text-align right
-		flex 1 0 25%
 :local(.wrapper)
 	background white
 	font-family 'Roboto', sans-serif
 	display flex
 	flex-direction row
-	.content-wrapper
-		flex 1 0 75%
+	min-height 100vh
+	position relative
 	
