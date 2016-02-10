@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "befa47fcacd7c8faccd5"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "9680a06b830f399b1dc2"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -40434,11 +40434,13 @@
 	        _this2.keyFrame = _this2.getAnimation();
 	        if (stats.moving) {
 	          _this2.props.trees.map(function (tree) {
-	            if (_this2.checkCollision(tree, 16)) {
+	            // 11 === tree width
+	            if (_this2.checkCollision(tree, 11)) {
 	              _this2.handleCollision({ type: 'tree' });
 	            }
 	          });
 	          _this2.props.jumps.map(function (jump) {
+	            // 40 === jump width
 	            if (_this2.checkCollision(jump, 40)) {
 	              _this2.handleCollision({ type: 'jump' });
 	            }
@@ -40951,7 +40953,9 @@
 	  (0, _createClass3.default)(Stats, [{
 	    key: 'render',
 	    value: function render() {
-	      var moving = this.props.moving;
+	      var _props = this.props;
+	      var moving = _props.moving;
+	      var altitude = _props.altitude;
 
 	      return _react2.default.createElement(
 	        'div',
@@ -40960,6 +40964,13 @@
 	          'p',
 	          null,
 	          moving ? 'Started!' : 'Paused'
+	        ),
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          'Altitude: ',
+	          altitude,
+	          'ft'
 	        )
 	      );
 	    }
@@ -40968,7 +40979,8 @@
 	}(_react.Component);
 
 	Stats.propTypes = {
-	  moving: _react.PropTypes.bool
+	  moving: _react.PropTypes.bool,
+	  altitude: _react.PropTypes.number
 	};
 	exports.default = Stats;
 
@@ -41347,6 +41359,7 @@
 			stats: (0, _immutable.Map)({
 				points: 0,
 				moving: false,
+				altitude: 15000,
 				clock: Date.now()
 			}),
 			settings: (0, _immutable.Map)({
@@ -41424,31 +41437,22 @@
 		var randomX = function randomX(size) {
 			return Math.floor(Math.random() * size.x);
 		};
-		var trees = state.updateIn(['game', 'trees'], function (oldTrees) {
-			return oldTrees.map(function (tree) {
+		var updatePositions = function updatePositions(oldState) {
+			return oldState.map(function (obj) {
 				var updatedY = Math.floor(Math.random() * 100) + gameSize.y;
 				if (dec < 2) updatedY = gameSize.y + 1;
-				var newY = tree.get('y') < 0 ? updatedY : tree.get('y') - dec;
-				var newX = tree.get('y') < 0 ? randomX(gameSize) : tree.get('x') + xFactor;
+				var newY = obj.get('y') < 0 ? updatedY : obj.get('y') - dec;
+				var newX = obj.get('y') < 0 ? randomX(gameSize) : obj.get('x') + xFactor;
 				return (0, _immutable.Map)({
 					x: newX,
 					y: newY
 				});
 			});
-		});
-		var jumps = trees.updateIn(['game', 'jumps'], function (oldJumps) {
-			return oldJumps.map(function (jump) {
-				var updatedY = Math.floor(Math.random() * 100) + gameSize.y;
-				if (dec < 2) updatedY = gameSize.y + 1;
-				var newY = jump.get('y') < 0 ? updatedY : jump.get('y') - dec;
-				var newX = jump.get('y') < 0 ? randomX(gameSize) : jump.get('x') + xFactor;
-				return (0, _immutable.Map)({
-					x: newX,
-					y: newY
-				});
-			});
-		});
-		return state.merge(jumps);
+		};
+		var trees = state.updateIn(['game', 'trees'], updatePositions);
+		var jumps = trees.updateIn(['game', 'jumps'], updatePositions);
+		var oldAlt = state.getIn(['game', 'stats', 'altitude']);
+		return jumps.setIn(['game', 'stats', 'altitude'], oldAlt - dec);
 	}
 
 /***/ },
