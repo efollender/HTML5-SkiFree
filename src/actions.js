@@ -43,6 +43,7 @@ export const INITIAL_STATE = Map({
 		stats: Map({
 			points: 0,
 			moving: false,
+			altitude: 15000,
 			clock: Date.now()
 		}),
 		settings: Map({
@@ -118,29 +119,20 @@ export function updateTrees(state, gameSize) {
 	const xFactor = getX(state);
 	const dec = state.getIn(['game', 'settings', 'gravity']);
 	const randomX = size => { return Math.floor(Math.random() * size.x); };
-	const trees = state.updateIn(['game', 'trees'], oldTrees => {
-		return oldTrees.map(tree => {
+	const updatePositions = oldState => {
+		return oldState.map(obj => {
 			let updatedY = Math.floor(Math.random() * 100) + gameSize.y;
 			if (dec < 2) updatedY = gameSize.y + 1;
-			let newY = (tree.get('y') < 0) ? updatedY  : tree.get('y') - dec;
-			let newX = (tree.get('y') < 0) ? randomX(gameSize) : tree.get('x') + xFactor;
+			let newY = (obj.get('y') < 0) ? updatedY  : obj.get('y') - dec;
+			let newX = (obj.get('y') < 0) ? randomX(gameSize) : obj.get('x') + xFactor;
 			return Map({
 				x: newX,
 				y: newY
 			});
 		});
-	});
-	const jumps = trees.updateIn(['game', 'jumps'], oldJumps => {
-		return oldJumps.map(jump => {
-			let updatedY = Math.floor(Math.random() * 100) + gameSize.y;
-			if (dec < 2) updatedY = gameSize.y + 1;
-			let newY = (jump.get('y') < 0) ? updatedY : jump.get('y') - dec;
-			let newX = (jump.get('y') < 0) ? randomX(gameSize) : jump.get('x') + xFactor;
-			return Map({
-				x: newX,
-				y: newY
-			});
-		});
-	});
-	return state.merge(jumps);
+	}
+	const trees = state.updateIn(['game', 'trees'], updatePositions);
+	const jumps = trees.updateIn(['game', 'jumps'], updatePositions);
+	const oldAlt = state.getIn(['game', 'stats', 'altitude']);
+	return jumps.setIn(['game', 'stats', 'altitude'], oldAlt - dec);
 }

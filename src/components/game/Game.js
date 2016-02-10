@@ -112,11 +112,13 @@ class Game extends Component {
       this.keyFrame = this.getAnimation();
       if (stats.moving) {
       	this.props.trees.map(tree => {
-      		if (this.checkCollision(tree, 16)) {
+          // 11 === tree width
+      		if (this.checkCollision(tree, 11)) {
       			this.handleCollision({type: 'tree'});
       		}
       	});
       	this.props.jumps.map(jump => {
+          // 40 === jump width
       		if(this.checkCollision(jump, 40)) {
       			this.handleCollision({type: 'jump'});
       		}
