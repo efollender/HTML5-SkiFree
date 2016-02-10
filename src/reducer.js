@@ -12,6 +12,7 @@ const {
     moveRight,
     resetSkier,
     startGame,
+    updateGravity,
     updateTrees,
     INITIAL_STATE
   } = actions;
@@ -44,6 +45,9 @@ export default function reducer(state=INITIAL_STATE, action) {
     	break;
     case ui.START_GAME:
       return startGame(state);
+      break;
+    case ui.UPDATE_GRAVITY:
+      return updateGravity(state, action.gravity);
       break;
     case ui.UPDATE_TREES:
       return updateTrees(state, action.width);

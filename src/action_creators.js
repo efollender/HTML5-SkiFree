@@ -56,6 +56,13 @@ export function startGame() {
 	};
 }
 
+export function updateGravity(gravity) {
+	return {
+		type: ui.UPDATE_GRAVITY,
+		gravity: gravity
+	};
+}
+
 export function updateTrees(gameSize) {
 	return {
 		type: ui.UPDATE_TREES,

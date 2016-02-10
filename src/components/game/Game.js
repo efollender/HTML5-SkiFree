@@ -24,13 +24,19 @@ const mapStateToProps = state => {
     skier: state.getIn(['game','skier']),
     trees: state.getIn(['game', 'trees']),
     jumps: state.getIn(['game', 'jumps']),
-    stats: state.getIn(['game', 'stats'])
+    stats: state.getIn(['game', 'stats']),
+    settings: state.getIn(['game', 'settings'])
   };
 };
 
 class Game extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate;
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      keydown: false
+    };
+  }
   handleCollision(collision) {
   	switch (collision.type) {
   		case 'jump':
@@ -58,11 +64,17 @@ class Game extends Component {
         if (!moving && notDead) this.start();
         this.props.moveRight();
         break;
+      case 40:
+        if (notDead) {
+          this.setState({keydown: true});
+          this.props.moveDown();
+        }
+        break;
       case 13:
         this.start();
         break;
       default:
-        this.props.moveDown();
+        return false;
         break;
     }
   }
@@ -93,6 +105,7 @@ class Game extends Component {
   }
   getAnimation() {
     const stats = this.props.stats.toJS();
+    const settings = this.props.settings.toJS();
     const gameSpace = findDOMNode(this.refs.gameWrapper);
     const gameWidth = gameSpace.firstChild.clientWidth;
     return requestAnimFrame(() => {
@@ -110,7 +123,14 @@ class Game extends Component {
       	});
         this.props.updateTrees({x: gameWidth, y: gameSpace.clientHeight});
       }
+      if (this.state.keydown) {
+        this.props.updateGravity(settings.gravity + 1);
+      } 
     });
+  }
+  keyUp() {
+    this.setState({keydown: false});
+    this.props.updateGravity(1);
   }
   componentDidMount() {
     for (let i=0; i < 6; i++){
@@ -120,10 +140,12 @@ class Game extends Component {
       this.props.addJump(this.generatePosition());
     } 
     this.listener = document.addEventListener('keydown', this.handleKeydown.bind(this), false);
+    this.keyUp = document.addEventListener('keyup', this.keyUp.bind(this), false);
     this.keyFrame = this.getAnimation();
   }
   componentWillUnmount() {
     document.removeEventListener(this.listener, false);
+    document.removeEventListener(this.keyUp, false);
   }
   render() {
     const {trees, skier, jumps} = this.props;
