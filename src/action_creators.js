@@ -1,5 +1,12 @@
 import * as ui from './constants';
 
+export function addJump(coords) {
+	return {
+		type: ui.ADD_JUMP,
+		loc: coords 
+	};
+}
+
 export function addTree(coords) {
 	return {
 		type: ui.ADD_TREE,

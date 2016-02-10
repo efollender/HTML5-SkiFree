@@ -21,3 +21,17 @@
   font-family Monaco, monospace
   text-transform uppercase
   font-weight bold
+:local(.Jump)
+  background lime
+  width 40px
+  height 9px
+  position absolute
+  &:before
+    position absolute
+    top 0
+    left 0
+    right 0
+    bottom 0
+    content ''
+    border-top 3px solid blue
+    border-bottom 3px solid pink

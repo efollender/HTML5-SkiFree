@@ -1,3 +1,4 @@
+export const ADD_JUMP = 'ADD_JUMP';
 export const ADD_TREE = 'ADD_TREE';
 export const MOVE_DOWN = 'MOVE_DOWN';
 export const MOVE_LEFT = 'MOVE_LEFT';

@@ -7,6 +7,7 @@ import StyleSheet from './Game.styl';
 import Skier from './Skier';
 import Tree from './Tree';
 import Stats from './Stats';
+import Jump from './Jump';
 import * as actionCreators from '../../action_creators';
 
 window.requestAnimFrame = (function(){
@@ -22,6 +23,7 @@ const mapStateToProps = state => {
   return {
     skier: state.getIn(['game','skier']),
     trees: state.getIn(['game', 'trees']),
+    jumps: state.getIn(['game', 'jumps']),
     stats: state.getIn(['game', 'stats'])
   };
 };
@@ -32,12 +34,15 @@ class Game extends Component {
 
   }
   handleKeydown(e) {
+    const moving = this.props.stats.toJS().moving;
     e.preventDefault();
     switch(e.keyCode) {
       case 37:
+        if (!moving) this.start();
         this.props.moveLeft();
         break;
       case 39:
+        if (!moving) this.start();
         this.props.moveRight();
         break;
       case 13:
@@ -51,7 +56,7 @@ class Game extends Component {
   handleJump() {
 
   }
-  generateTree() {
+  generatePosition() {
     const gameSpace = findDOMNode(this.refs.gameWrapper);
     const randomY = Math.floor(Math.random() * gameSpace.clientHeight);
     const randomX = Math.floor(Math.random() * gameSpace.firstChild.clientWidth);
@@ -74,7 +79,10 @@ class Game extends Component {
   }
   componentDidMount() {
     for (let i=0; i < 6; i++){
-      this.props.addTree(this.generateTree());
+      this.props.addTree(this.generatePosition());
+    } 
+    for (let i=0; i < 3; i++){
+      this.props.addJump(this.generatePosition());
     } 
     this.listener = document.addEventListener('keydown', this.handleKeydown.bind(this), false);
     this.keyFrame = this.getAnimation();
@@ -83,13 +91,16 @@ class Game extends Component {
     document.removeEventListener(this.listener, false);
   }
   render() {
-    const {trees, skier} = this.props;
+    const {trees, skier, jumps} = this.props;
     return (
       <div className={StyleSheet.wrapper}
         ref="gameWrapper">
         <Skier status={skier} />
         {trees.map((tree, index) => {
           return <Tree key={`tree-${index}`} coords={tree}/>;
+        })}
+        {jumps.map((jump, index) => {
+          return <Jump key={`jump-${index}`} coords={jump}/>;
         })}
         <Stats {...this.props.stats.toJS()} />
       </div>

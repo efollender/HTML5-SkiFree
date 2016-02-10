@@ -3,6 +3,7 @@ import * as ui from './constants';
 import * as actions from './actions';
 
 const {
+    addJump,
     addTree,
     moveDown,
     moveLeft,
@@ -14,6 +15,9 @@ const {
 
 export default function reducer(state=INITIAL_STATE, action) {
   switch (action.type) {
+    case ui.ADD_JUMP:
+      return addJump(state, action.loc);
+      break;
     case ui.ADD_TREE:
       return addTree(state, action.loc);
       break;
