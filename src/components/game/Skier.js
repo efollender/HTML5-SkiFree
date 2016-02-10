@@ -17,7 +17,20 @@ export default class Skier extends Component {
         return 'assets/player_side.png';
         break;
     }
-    return 'assets/player_side.png';
+    return 'assets/player_down.png';
+  }
+  getStatus() {
+    const skier = this.props.status.toJS();
+    return `assets/${skier[skier.state].asset}`;
+  }
+  getImage() {
+    const skier = this.props.status.toJS();
+    console.log(skier.state);
+    if (skier.state !== 'default')
+      return this.getStatus();
+    else {
+      return this.getPosition();
+    }
   }
   render() {
     const skier = this.props.status.toJS();
@@ -27,7 +40,7 @@ export default class Skier extends Component {
           down: skier.position === 'down',
           left: skier.position === 'left',
           right: skier.position === 'right'
-        })} src={this.getPosition()}/>
+        })} src={this.getImage()}/>
       </div>
     );
   }

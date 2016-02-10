@@ -14,6 +14,18 @@ export function addTree(coords) {
 	};
 }
 
+export function handleJump() {
+	return {
+		type: ui.HANDLE_JUMP
+	};
+}
+
+export function handleTree() {
+	return {
+		type: ui.HANDLE_TREE
+	};
+}
+
 export function moveLeft() {
 	return {
 		type: ui.MOVE_LEFT
@@ -32,14 +44,21 @@ export function moveDown() {
 	};
 }
 
+export function resetSkier() {
+	return {
+		type: ui.RESET_SKIER
+	};
+}
+
 export function startGame() {
 	return {
 		type: ui.START_GAME
 	};
 }
 
-export function updateTrees() {
+export function updateTrees(gameSize) {
 	return {
-		type: ui.UPDATE_TREES
+		type: ui.UPDATE_TREES,
+		width: gameSize
 	};
 }

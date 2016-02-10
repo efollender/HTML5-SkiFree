@@ -30,8 +30,20 @@ const mapStateToProps = state => {
 
 class Game extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate;
-  handleCollision() {
 
+  handleCollision(collision) {
+  	console.log(collision.type);
+  	switch (collision.type) {
+  		case 'jump':
+  			this.props.handleJump();
+  			break;
+  		case 'tree':
+  			this.props.handleTree();
+  			break;
+  		default:
+  			return false;
+  	}
+  	setTimeout(this.props.resetSkier, 1000);
   }
   handleKeydown(e) {
     const moving = this.props.stats.toJS().moving;
@@ -53,8 +65,14 @@ class Game extends Component {
         break;
     }
   }
-  handleJump() {
-
+  checkCollision(obj, width) {
+  	const skier = findDOMNode(this.refs.skier).firstChild;
+  	const skierY = skier.y + skier.clientHeight;
+  	const pos = {x: obj.get('x'), y: obj.get('y')};
+  	const checkLeft = skier.x <= pos.x && pos.x <= (skier.x + skier.width);
+  	const checkRight = pos.x + width >= skier.x && pos.x + width <= (skier.x + skier.width);
+  	const checkTop = skierY === pos.y;
+  	return (checkRight || checkLeft) && checkTop ? true : false;
   }
   generatePosition() {
     const gameSpace = findDOMNode(this.refs.gameWrapper);
@@ -70,10 +88,22 @@ class Game extends Component {
   }
   getAnimation() {
     const stats = this.props.stats.toJS();
+    const gameSpace = findDOMNode(this.refs.gameWrapper);
+    const gameWidth = gameSpace.firstChild.clientWidth;
     return requestAnimFrame(() => {
       this.keyFrame = this.getAnimation();
       if (stats.moving) {
-        this.props.updateTrees();
+      	this.props.trees.map(tree => {
+      		if (this.checkCollision(tree, 16)) {
+      			this.handleCollision({type: 'tree'});
+      		}
+      	});
+      	this.props.jumps.map(jump => {
+      		if(this.checkCollision(jump, 40)) {
+      			this.handleCollision({type: 'jump'});
+      		}
+      	});
+        this.props.updateTrees({x: gameWidth, y: gameSpace.clientHeight});
       }
     });
   }
@@ -95,7 +125,7 @@ class Game extends Component {
     return (
       <div className={StyleSheet.wrapper}
         ref="gameWrapper">
-        <Skier status={skier} />
+        <Skier status={skier} ref="skier" />
         {trees.map((tree, index) => {
           return <Tree key={`tree-${index}`} coords={tree}/>;
         })}

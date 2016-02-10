@@ -69,6 +69,15 @@ export function addJump(state, pos) {
 	});
 }
 
+export function handleJump(state) {
+	return state.setIn(['game', 'skier', 'state'], 'jump');
+}
+
+export function handleTree(state) {
+	const newState = state.setIn(['game', 'skier', 'state'], 'dead');
+	return newState.setIn(['game', 'stats', 'moving'], false);
+}
+
 export function moveLeft(state) {
 	return state.updateIn(['game', 'skier', 'position'], oldPosition => {
 		return 'left';
@@ -87,6 +96,11 @@ export function moveDown(state) {
 	});
 }
 
+export function resetSkier(state) {
+	const newState = state.setIn(['game', 'skier', 'state'], 'default');
+	return newState.setIn(['game', 'stats', 'moving'], true);
+}
+
 export function startGame(state) {
 	return state.updateIn(['game', 'stats'], oldStats => {
 		return oldStats.merge(fromJS({
@@ -96,21 +110,26 @@ export function startGame(state) {
 	});
 }
 
-export function updateTrees(state) {
+export function updateTrees(state, gameSize) {
 	const xFactor = getX(state);
+	const randomX = size => { return Math.floor(Math.random() * size.x); };
 	const trees = state.updateIn(['game', 'trees'], oldTrees => {
 		return oldTrees.map(tree => {
+			let newY = (tree.get('y') < 0) ? gameSize.y + 1 : tree.get('y') - 1;
+			let newX = (tree.get('y') < 0) ? randomX(gameSize) : tree.get('x') + xFactor;
 			return Map({
-				x: tree.get('x') + xFactor,
-				y: tree.get('y') - 1
+				x: newX,
+				y: newY
 			});
 		});
 	});
 	const jumps = trees.updateIn(['game', 'jumps'], oldJumps => {
 		return oldJumps.map(jump => {
+			let newY = (jump.get('y') < 0) ? gameSize.y + 1 : jump.get('y') - 1;
+			let newX = (jump.get('y') < 0) ? randomX(gameSize) : jump.get('x') + xFactor;
 			return Map({
-				x: jump.get('x') + xFactor,
-				y: jump.get('y') - 1
+				x: newX,
+				y: newY
 			});
 		});
 	});
