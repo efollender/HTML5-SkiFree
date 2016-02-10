@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "1bda1bef678b9aeb9287"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "cab6a3df154f890d956e"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -40173,14 +40173,16 @@
 	    key: 'handleKeydown',
 	    value: function handleKeydown(e) {
 	      var moving = this.props.stats.toJS().moving;
+	      var state = this.props.skier.toJS().state;
+	      var notDead = state === 'default';
 	      e.preventDefault();
 	      switch (e.keyCode) {
 	        case 37:
-	          if (!moving) this.start();
+	          if (!moving && notDead) this.start();
 	          this.props.moveLeft();
 	          break;
 	        case 39:
-	          if (!moving) this.start();
+	          if (!moving && notDead) this.start();
 	          this.props.moveRight();
 	          break;
 	        case 13:
@@ -40199,6 +40201,10 @@
 	      var pos = { x: obj.get('x'), y: obj.get('y') };
 	      var checkLeft = skier.x <= pos.x && pos.x <= skier.x + skier.width;
 	      var checkRight = pos.x + width >= skier.x && pos.x + width <= skier.x + skier.width;
+	      if (width > skier.clientWidth) {
+	        checkLeft = pos.x <= skier.x && skier.x <= pos.x + width;
+	        checkRight = skier.x + skier.clientWidth >= pos.x && skier.x + skier.clientWidth <= pos.x + width;
+	      }
 	      var checkTop = skierY === pos.y;
 	      return (checkRight || checkLeft) && checkTop ? true : false;
 	    }
