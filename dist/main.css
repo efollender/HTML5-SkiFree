@@ -62,6 +62,9 @@ body {
   font-family: Monaco, monospace;
   text-transform: uppercase;
   font-weight: bold;
+  font-size: 0.8rem;
+  background: #fff;
+  z-index: 3;
 }
 .rRw1_6SszRYvxfFR0c0dD {
   background: #0f0;
