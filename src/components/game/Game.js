@@ -47,14 +47,16 @@ class Game extends Component {
   }
   handleKeydown(e) {
     const moving = this.props.stats.toJS().moving;
+    const state = this.props.skier.toJS().state;
+    let notDead = (state === 'default');
     e.preventDefault();
     switch(e.keyCode) {
       case 37:
-        if (!moving) this.start();
+        if (!moving && notDead) this.start();
         this.props.moveLeft();
         break;
       case 39:
-        if (!moving) this.start();
+        if (!moving && notDead) this.start();
         this.props.moveRight();
         break;
       case 13:
@@ -69,8 +71,12 @@ class Game extends Component {
   	const skier = findDOMNode(this.refs.skier).firstChild;
   	const skierY = skier.y + skier.clientHeight;
   	const pos = {x: obj.get('x'), y: obj.get('y')};
-  	const checkLeft = skier.x <= pos.x && pos.x <= (skier.x + skier.width);
-  	const checkRight = pos.x + width >= skier.x && pos.x + width <= (skier.x + skier.width);
+  	let checkLeft = skier.x <= pos.x && pos.x <= (skier.x + skier.width);
+  	let checkRight = pos.x + width >= skier.x && pos.x + width <= (skier.x + skier.width);
+  	if (width > skier.clientWidth) {
+  		checkLeft = pos.x <= skier.x && skier.x <= (pos.x + width);
+  		checkRight = skier.x + skier.clientWidth >= pos.x && skier.x + skier.clientWidth <= (pos.x + width);
+  	}
   	const checkTop = skierY === pos.y;
   	return (checkRight || checkLeft) && checkTop ? true : false;
   }
