@@ -64,7 +64,7 @@ export function moveDown(state) {
 export function startGame(state) {
 	return state.updateIn(['game', 'stats'], oldStats => {
 		return oldStats.merge(fromJS({
-			moving: true,
+			moving: !oldStats.get('moving'),
 			clock: Date.now()
 		}));
 	});

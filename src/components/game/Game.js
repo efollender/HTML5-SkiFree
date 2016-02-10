@@ -6,6 +6,7 @@ import {findDOMNode} from 'react-dom';
 import StyleSheet from './Game.styl';
 import Skier from './Skier';
 import Tree from './Tree';
+import Stats from './Stats';
 import * as actionCreators from '../../action_creators';
 
 window.requestAnimFrame = (function(){
@@ -90,6 +91,7 @@ class Game extends Component {
         {trees.map((tree, index) => {
           return <Tree key={`tree-${index}`} coords={tree}/>;
         })}
+        <Stats {...this.props.stats.toJS()} />
       </div>
     );
   }
