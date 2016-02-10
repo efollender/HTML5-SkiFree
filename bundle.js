@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "9680a06b830f399b1dc2"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "39de45bf23484797722f"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -41289,7 +41289,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+	  value: true
 	});
 	exports.INITIAL_STATE = undefined;
 	exports.addTree = addTree;
@@ -41320,139 +41320,143 @@
 
 	//util
 	var getX = function getX(state) {
-		var direction = state.getIn(['game', 'skier', 'position']);
-		switch (direction) {
-			case 'right':
-				return -1;
-				break;
-			case 'left':
-				return 1;
-				break;
-			default:
-				return 0;
-				break;
-		}
-		return 0;
+	  var direction = state.getIn(['game', 'skier', 'position']);
+	  switch (direction) {
+	    case 'right':
+	      return -1;
+	      break;
+	    case 'left':
+	      return 1;
+	      break;
+	    default:
+	      return 0;
+	      break;
+	  }
+	  return 0;
 	};
 
 	var INITIAL_STATE = exports.INITIAL_STATE = (0, _immutable.Map)({
-		game: (0, _immutable.Map)({
-			jumps: (0, _immutable.List)(),
-			monster: (0, _immutable.Map)(),
-			skier: (0, _immutable.Map)({
-				state: 'default',
-				position: 'down',
-				jump: (0, _immutable.Map)({
-					asset: 'player_jump.png',
-					status: 'jump'
-				}),
-				dead: (0, _immutable.Map)({
-					asset: 'player_dead.png',
-					status: 'dead'
-				}),
-				default: (0, _immutable.Map)({
-					asset: 'player_down.png',
-					status: 'default'
-				})
-			}),
-			trees: (0, _immutable.List)(),
-			stats: (0, _immutable.Map)({
-				points: 0,
-				moving: false,
-				altitude: 15000,
-				clock: Date.now()
-			}),
-			settings: (0, _immutable.Map)({
-				gravity: 1
-			})
-		})
+	  game: (0, _immutable.Map)({
+	    jumps: (0, _immutable.List)(),
+	    monster: (0, _immutable.Map)(),
+	    skier: (0, _immutable.Map)({
+	      state: 'default',
+	      position: 'down',
+	      jump: (0, _immutable.Map)({
+	        asset: 'player_jump.png',
+	        status: 'jump'
+	      }),
+	      dead: (0, _immutable.Map)({
+	        asset: 'player_dead.png',
+	        status: 'dead'
+	      }),
+	      default: (0, _immutable.Map)({
+	        asset: 'player_down.png',
+	        status: 'default'
+	      })
+	    }),
+	    trees: (0, _immutable.List)(),
+	    stats: (0, _immutable.Map)({
+	      points: 0,
+	      moving: false,
+	      altitude: 15000,
+	      clock: Date.now()
+	    }),
+	    settings: (0, _immutable.Map)({
+	      gravity: 1
+	    })
+	  })
 	});
 
 	function addTree(state, pos) {
-		return state.updateIn(['game', 'trees'], function (oldTrees) {
-			return oldTrees.push((0, _immutable.fromJS)({
-				x: pos.randomX,
-				y: pos.randomY
-			}));
-		});
+	  return state.updateIn(['game', 'trees'], function (oldTrees) {
+	    return oldTrees.push((0, _immutable.fromJS)({
+	      x: pos.randomX,
+	      y: pos.randomY
+	    }));
+	  });
 	}
 
 	function addJump(state, pos) {
-		return state.updateIn(['game', 'jumps'], function (oldJumps) {
-			return oldJumps.push((0, _immutable.fromJS)({
-				x: pos.randomX,
-				y: pos.randomY
-			}));
-		});
+	  return state.updateIn(['game', 'jumps'], function (oldJumps) {
+	    return oldJumps.push((0, _immutable.fromJS)({
+	      x: pos.randomX,
+	      y: pos.randomY
+	    }));
+	  });
 	}
 
 	function handleJump(state) {
-		return state.setIn(['game', 'skier', 'state'], 'jump');
+	  var oldGrav = state.getIn(['game', 'settings', 'gravity']);
+	  var newState = state.setIn(['game', 'skier', 'state'], 'jump');
+	  return newState.setIn(['game', 'settings', 'gravity'], oldGrav * 2);
 	}
 
 	function handleTree(state) {
-		var newState = state.setIn(['game', 'skier', 'state'], 'dead');
-		return newState.setIn(['game', 'stats', 'moving'], false);
+	  var newState = state.setIn(['game', 'skier', 'state'], 'dead');
+	  return newState.setIn(['game', 'stats', 'moving'], false);
 	}
 
 	function moveLeft(state) {
-		return state.updateIn(['game', 'skier', 'position'], function (oldPosition) {
-			return 'left';
-		});
+	  return state.updateIn(['game', 'skier', 'position'], function (oldPosition) {
+	    return 'left';
+	  });
 	}
 
 	function moveRight(state) {
-		return state.updateIn(['game', 'skier', 'position'], function (oldPosition) {
-			return 'right';
-		});
+	  return state.updateIn(['game', 'skier', 'position'], function (oldPosition) {
+	    return 'right';
+	  });
 	}
 
 	function moveDown(state) {
-		return state.updateIn(['game', 'skier', 'position'], function (oldPosition) {
-			return 'down';
-		});
+	  return state.updateIn(['game', 'skier', 'position'], function (oldPosition) {
+	    return 'down';
+	  });
 	}
 
 	function resetSkier(state) {
-		var newState = state.setIn(['game', 'skier', 'state'], 'default');
-		return newState.setIn(['game', 'stats', 'moving'], true);
+	  var newState = state.setIn(['game', 'skier', 'state'], 'default');
+	  newState = newState.setIn(['game', 'stats', 'moving'], true);
+	  newState = newState.setIn(['game', 'settings', 'gravity'], 1);
+	  return newState;
 	}
 
 	function startGame(state) {
-		return state.updateIn(['game', 'stats'], function (oldStats) {
-			return oldStats.merge((0, _immutable.fromJS)({
-				moving: !oldStats.get('moving'),
-				clock: Date.now()
-			}));
-		});
+	  return state.updateIn(['game', 'stats'], function (oldStats) {
+	    return oldStats.merge((0, _immutable.fromJS)({
+	      moving: !oldStats.get('moving'),
+	      clock: Date.now()
+	    }));
+	  });
 	}
 
 	function updateGravity(state, gravity) {
-		return state.setIn(['game', 'settings', 'gravity'], gravity);
+	  return state.setIn(['game', 'settings', 'gravity'], gravity);
 	}
 
 	function updateTrees(state, gameSize) {
-		var xFactor = getX(state);
-		var dec = state.getIn(['game', 'settings', 'gravity']);
-		var randomX = function randomX(size) {
-			return Math.floor(Math.random() * size.x);
-		};
-		var updatePositions = function updatePositions(oldState) {
-			return oldState.map(function (obj) {
-				var updatedY = Math.floor(Math.random() * 100) + gameSize.y;
-				if (dec < 2) updatedY = gameSize.y + 1;
-				var newY = obj.get('y') < 0 ? updatedY : obj.get('y') - dec;
-				var newX = obj.get('y') < 0 ? randomX(gameSize) : obj.get('x') + xFactor;
-				return (0, _immutable.Map)({
-					x: newX,
-					y: newY
-				});
-			});
-		};
-		var trees = state.updateIn(['game', 'trees'], updatePositions);
-		var jumps = trees.updateIn(['game', 'jumps'], updatePositions);
-		var oldAlt = state.getIn(['game', 'stats', 'altitude']);
-		return jumps.setIn(['game', 'stats', 'altitude'], oldAlt - dec);
+	  var xFactor = getX(state);
+	  var dec = state.getIn(['game', 'settings', 'gravity']);
+	  var randomX = function randomX(size) {
+	    return Math.floor(Math.random() * size.x);
+	  };
+	  var updatePositions = function updatePositions(oldState) {
+	    return oldState.map(function (obj) {
+	      var updatedY = Math.floor(Math.random() * 100) + gameSize.y;
+	      if (dec < 2) updatedY = gameSize.y + 1;
+	      var newY = obj.get('y') < 0 ? updatedY : obj.get('y') - dec;
+	      var newX = obj.get('y') < 0 ? randomX(gameSize) : obj.get('x') + xFactor;
+	      return (0, _immutable.Map)({
+	        x: newX,
+	        y: newY
+	      });
+	    });
+	  };
+	  var trees = state.updateIn(['game', 'trees'], updatePositions);
+	  var jumps = trees.updateIn(['game', 'jumps'], updatePositions);
+	  var oldAlt = state.getIn(['game', 'stats', 'altitude']);
+	  return jumps.setIn(['game', 'stats', 'altitude'], oldAlt - dec);
 	}
 
 /***/ },
