@@ -25,7 +25,6 @@ export default class Skier extends Component {
   }
   getImage() {
     const skier = this.props.status.toJS();
-    console.log(skier.state);
     if (skier.state !== 'default')
       return this.getStatus();
     else {

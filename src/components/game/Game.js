@@ -32,7 +32,6 @@ class Game extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate;
 
   handleCollision(collision) {
-  	console.log(collision.type);
   	switch (collision.type) {
   		case 'jump':
   			this.props.handleJump();
@@ -72,10 +71,10 @@ class Game extends Component {
   	const skierY = skier.y + skier.clientHeight;
   	const pos = {x: obj.get('x'), y: obj.get('y')};
   	let checkLeft = skier.x <= pos.x && pos.x <= (skier.x + skier.width);
-  	let checkRight = pos.x + width >= skier.x && pos.x + width <= (skier.x + skier.width);
+  	let checkRight = (pos.x + width) >= skier.x && (pos.x + width) <= (skier.x + skier.width);
   	if (width > skier.clientWidth) {
   		checkLeft = pos.x <= skier.x && skier.x <= (pos.x + width);
-  		checkRight = skier.x + skier.clientWidth >= pos.x && skier.x + skier.clientWidth <= (pos.x + width);
+  		checkRight = (skier.x + skier.clientWidth) >= pos.x && (skier.x + skier.clientWidth) <= (pos.x + width);
   	}
   	const checkTop = skierY === pos.y;
   	return (checkRight || checkLeft) && checkTop ? true : false;
