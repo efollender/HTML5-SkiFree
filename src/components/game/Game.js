@@ -78,18 +78,51 @@ class Game extends Component {
         break;
     }
   }
-  checkCollision(obj, width) {
+  checkCollision(obj, width, height) {
   	const skier = findDOMNode(this.refs.skier).firstChild;
-  	const skierY = skier.y + skier.clientHeight;
-  	const pos = {x: obj.get('x'), y: obj.get('y')};
-  	let checkLeft = skier.x <= pos.x && pos.x <= (skier.x + skier.width);
-  	let checkRight = (pos.x + width) >= skier.x && (pos.x + width) <= (skier.x + skier.width);
-  	if (width > skier.clientWidth) {
-  		checkLeft = pos.x <= skier.x && skier.x <= (pos.x + width);
-  		checkRight = (skier.x + skier.clientWidth) >= pos.x && (skier.x + skier.clientWidth) <= (pos.x + width);
-  	}
-  	const checkTop = skierY === pos.y;
-  	return (checkRight || checkLeft) && checkTop ? true : false;
+    const skiObj = {
+      left: skier.x, 
+      top: skier.y,
+      right: skier.x +skier.clientWidth,
+      bottom: skier.y + skier.clientHeight,
+      width: skier.clientWidth,
+      height: skier.clientHeight
+    };
+  	const obstacle = {
+      left: obj.get('x'), 
+      top: obj.get('y'),
+      right: obj.get('x') + width,
+      bottom: obj.get('y') + height,
+      width: width,
+      height: height
+    };
+    let wider = skiObj;
+    let thinner = obstacle;
+    if (skiObj.width < obstacle.width) {
+      thinner = skiObj;
+      wider = obstacle;
+    }
+  	const checkLeft = (obj1, obj2) => {
+      return obj1.left <= obj2.left && obj2.left <= obj1.right;
+    };
+  	const checkRight = (obj1, obj2) => {
+      return obj2.right >= obj1.left && obj2.right <= obj1.right;
+    };
+    const checkVertical = (obj1, obj2) => {
+      return obj1.bottom <= obj2.top && obj1.bottom >= obj2.bottom;
+    };
+    const checkSide = (obj1, obj2) => {
+      return obj1.right === obj2.left || obj1.left === obj2.right;
+    };
+  	const checkTop = skiObj.top === obstacle.top;
+    //check for top collision
+  	if (checkRight(wider, thinner) || checkLeft(wider, thinner)) {
+      return checkTop ? true : false;
+    }
+    //check for side collision
+    else if (checkVertical(skiObj, obstacle)) {
+      return checkSide(skiObj, obstacle) ? true : false;
+    }
   }
   generatePosition() {
     const gameSpace = findDOMNode(this.refs.gameWrapper);
@@ -113,13 +146,13 @@ class Game extends Component {
       if (stats.moving) {
       	this.props.trees.map(tree => {
           // 11 === tree width
-      		if (this.checkCollision(tree, 11)) {
+      		if (this.checkCollision(tree, 11, 16)) {
       			this.handleCollision({type: 'tree'});
       		}
       	});
       	this.props.jumps.map(jump => {
           // 40 === jump width
-      		if(this.checkCollision(jump, 40)) {
+      		if(this.checkCollision(jump, 40, 9)) {
       			this.handleCollision({type: 'jump'});
       		}
       	});
