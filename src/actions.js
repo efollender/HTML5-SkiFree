@@ -47,7 +47,7 @@ export const INITIAL_STATE = Map({
       clock: Date.now()
     }),
     settings: Map({
-      gravity: 1
+      gravity: 2
     })
   })
 });
@@ -102,7 +102,7 @@ export function moveDown(state) {
 export function resetSkier(state) {
   let newState = state.setIn(['game', 'skier', 'state'], 'default');
   newState = newState.setIn(['game', 'stats', 'moving'], true);
-  newState = newState.setIn(['game', 'settings', 'gravity'], 1);
+  newState = newState.setIn(['game', 'settings', 'gravity'], 2);
   return newState;
 }
 
