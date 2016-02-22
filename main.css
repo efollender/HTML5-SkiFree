@@ -29,6 +29,22 @@ body {
   max-width: 100%;
   overflow: hidden;
 }
+._3pRz6vJzjxzlFrthJBzM0P {
+  font-family: Monaco, monospace;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.8rem;
+}
+._3pRz6vJzjxzlFrthJBzM0P .thought-box {
+  position: absolute;
+  left: 35%;
+  right: 35%;
+  background: #fff;
+  border: 2px solid #000;
+  bottom: 10%;
+  padding: 1em;
+  z-index: 10;
+}
 ._3jQMxvFCqJjifjxB0IdmBS {
   position: absolute;
   top: 50%;
@@ -59,10 +75,6 @@ body {
   right: 0;
   padding: 0 1em;
   border: 2px solid #000;
-  font-family: Monaco, monospace;
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 0.8rem;
   background: #fff;
   z-index: 3;
 }
