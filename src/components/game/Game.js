@@ -78,18 +78,29 @@ class Game extends Component {
         break;
     }
   }
-  checkCollision(obj, width) {
-  	const skier = findDOMNode(this.refs.skier).firstChild;
-  	const skierY = skier.y + skier.clientHeight;
-  	const pos = {x: obj.get('x'), y: obj.get('y')};
-  	let checkLeft = skier.x <= pos.x && pos.x <= (skier.x + skier.width);
-  	let checkRight = (pos.x + width) >= skier.x && (pos.x + width) <= (skier.x + skier.width);
-  	if (width > skier.clientWidth) {
-  		checkLeft = pos.x <= skier.x && skier.x <= (pos.x + width);
-  		checkRight = (skier.x + skier.clientWidth) >= pos.x && (skier.x + skier.clientWidth) <= (pos.x + width);
-  	}
-  	const checkTop = skierY === pos.y;
-  	return (checkRight || checkLeft) && checkTop ? true : false;
+  checkCollision(obj, width, height) {
+    const skier = findDOMNode(this.refs.skier).firstChild;
+    const x1 = skier.x;
+    const w1 = skier.clientWidth;
+    const x2 = obj.get('x');
+    const w2 = width;
+    const y1 = skier.y;
+    const h1 = skier.clientHeight;
+    const y2 = obj.get('y');
+    const h2 = height;
+                  //right skier -1 left of left obj
+    let overlap = !(((x1 + w1 - 1) < x2)  ||
+                  //right obj - 1 left of left skier
+                   ((x2 + w2 - 1) < x1)   ||
+                  //bottom skier - 1 above top obj
+                   ((y1 + h1 - 1) < y2) ||   
+                  // bottom obj - 1 above top skier
+                   ((y2 + h2 - 1) < y1));
+
+    return (overlap && (
+            ((y1 + h1 - 1) === y2)  || 
+            ((x1 + w1 - 1) === x2)  || 
+            ((x2 + w2 - 1) === x1)  ));
   }
   generatePosition() {
     const gameSpace = findDOMNode(this.refs.gameWrapper);
@@ -113,13 +124,13 @@ class Game extends Component {
       if (stats.moving) {
       	this.props.trees.map(tree => {
           // 11 === tree width
-      		if (this.checkCollision(tree, 11)) {
+      		if (this.checkCollision(tree, 11, 16)) {
       			this.handleCollision({type: 'tree'});
       		}
       	});
       	this.props.jumps.map(jump => {
           // 40 === jump width
-      		if(this.checkCollision(jump, 40)) {
+      		if(this.checkCollision(jump, 40, 9)) {
       			this.handleCollision({type: 'jump'});
       		}
       	});
@@ -132,10 +143,10 @@ class Game extends Component {
   }
   keyUp() {
     this.setState({keydown: false});
-    this.props.updateGravity(1);
+    this.props.updateGravity(2);
   }
   componentDidMount() {
-    for (let i=0; i < 6; i++){
+    for (let i=0; i < 20; i++){
       this.props.addTree(this.generatePosition());
     } 
     for (let i=0; i < 3; i++){
