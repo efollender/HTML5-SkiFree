@@ -1,5 +1,19 @@
 @import 'nib'
 
+:local(.wrapper)
+  font-family Monaco, monospace
+  text-transform uppercase
+  font-weight bold
+  font-size .8rem
+  .thought-box
+    position absolute
+    left 35%
+    right 35%
+    background white
+    border 2px solid black
+    bottom 10%
+    padding 1em
+    z-index 10
 :local(.Skier)
   position absolute
   top 50%
@@ -20,10 +34,6 @@
   right 0
   padding 0 1em
   border 2px solid black
-  font-family Monaco, monospace
-  text-transform uppercase
-  font-weight bold
-  font-size .8rem
   background white
   z-index 3
 :local(.Jump)

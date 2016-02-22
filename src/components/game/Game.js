@@ -3,6 +3,7 @@ import {shouldPureComponentUpdate} from 'react-pure-render';
 import {List, Map} from 'immutable';
 import {connect} from 'react-redux';
 import {findDOMNode} from 'react-dom';
+import {getThoughts} from '../../utils/firebaseUtils';
 import StyleSheet from './Game.styl';
 import Skier from './Skier';
 import Tree from './Tree';
@@ -41,14 +42,16 @@ class Game extends Component {
   	switch (collision.type) {
   		case 'jump':
   			this.props.handleJump();
+        setTimeout(this.props.resetSkier, 1000);
   			break;
   		case 'tree':
   			this.props.handleTree();
+         setTimeout(this.props.resetSkier, 2000);
   			break;
   		default:
   			return false;
   	}
-  	setTimeout(this.props.resetSkier, 1000);
+  	
   }
   handleKeydown(e) {
     const moving = this.props.stats.toJS().moving;
@@ -72,6 +75,7 @@ class Game extends Component {
         break;
       case 13:
         this.start();
+        this.setThought();
         break;
       default:
         return false;
@@ -88,7 +92,7 @@ class Game extends Component {
     const h1 = skier.clientHeight;
     const y2 = obj.get('y');
     const h2 = height;
-                  //right skier -1 left of left obj
+                  //right skier - 1 left of left obj
     let overlap = !(((x1 + w1 - 1) < x2)  ||
                   //right obj - 1 left of left skier
                    ((x2 + w2 - 1) < x1)   ||
@@ -126,6 +130,7 @@ class Game extends Component {
           // 11 === tree width
       		if (this.checkCollision(tree, 11, 16)) {
       			this.handleCollision({type: 'tree'});
+            this.setThought();
       		}
       	});
       	this.props.jumps.map(jump => {
@@ -145,6 +150,24 @@ class Game extends Component {
     this.setState({keydown: false});
     this.props.updateGravity(2);
   }
+  setThought() {
+    let randomNum;
+    if(!this.state.thoughts){
+      getThoughts(thoughts => {
+        randomNum = Math.floor(Math.random() * thoughts.length);
+        this.setState({
+          thoughts: thoughts,
+          thought: thoughts[randomNum]
+        });
+      });
+    } else {
+      randomNum = Math.floor(Math.random() * this.state.thoughts.length);
+      this.setState({
+        thought: this.state.thoughts[randomNum]
+      });
+    }
+      
+  }
   componentDidMount() {
     for (let i=0; i < 20; i++){
       this.props.addTree(this.generatePosition());
@@ -155,13 +178,16 @@ class Game extends Component {
     this.listener = document.addEventListener('keydown', this.handleKeydown.bind(this), false);
     this.keyUp = document.addEventListener('keyup', this.keyUp.bind(this), false);
     this.keyFrame = this.getAnimation();
+    this.setThought(); 
   }
   componentWillUnmount() {
     document.removeEventListener(this.listener, false);
     document.removeEventListener(this.keyUp, false);
   }
   render() {
-    const {trees, skier, jumps} = this.props;
+    const {trees, skier, jumps, stats} = this.props;
+    const moving = stats.toJS().moving;
+    const {thought} = this.state;
     return (
       <div className={StyleSheet.wrapper}
         ref="gameWrapper">
@@ -172,7 +198,10 @@ class Game extends Component {
         {jumps.map((jump, index) => {
           return <Jump key={`jump-${index}`} coords={jump}/>;
         })}
-        <Stats {...this.props.stats.toJS()} />
+        <Stats {...stats.toJS()} />
+        {(thought && !moving) &&
+          <div className="thought-box">{thought}</div>
+        }
       </div>
     );
   }

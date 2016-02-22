@@ -47,6 +47,7 @@
     "axios": "*",
     "babel-plugin-transform-runtime": "^6.4.3",
     "classnames": "^2.2.3",
+    "firebase": "^2.4.1",
     "immutable": "^3.7.6",
     "react": "^0.14.6",
     "react-addons-pure-render-mixin": "^0.14.6",
