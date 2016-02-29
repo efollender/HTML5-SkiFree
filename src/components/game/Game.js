@@ -10,6 +10,7 @@ import Tree from './Tree';
 import Stats from './Stats';
 import Jump from './Jump';
 import * as actionCreators from '../../action_creators';
+import Crafty from 'craftyjs';
 
 window.requestAnimFrame = (function(){
   return  window.requestAnimationFrame       ||
@@ -107,9 +108,8 @@ class Game extends Component {
             ((x2 + w2 - 1) === x1)  ));
   }
   generatePosition() {
-    const gameSpace = findDOMNode(this.refs.gameWrapper);
-    const randomY = Math.floor(Math.random() * gameSpace.clientHeight);
-    const randomX = Math.floor(Math.random() * gameSpace.firstChild.clientWidth);
+    const randomY = Math.floor(Math.random() * window.outerHeight);
+    const randomX = Math.floor(Math.random() * window.outerWidth);
     return({randomX, randomY});
   }
   start() {
@@ -121,25 +121,23 @@ class Game extends Component {
   getAnimation() {
     const stats = this.props.stats.toJS();
     const settings = this.props.settings.toJS();
-    const gameSpace = findDOMNode(this.refs.gameWrapper);
-    const gameWidth = gameSpace.firstChild.clientWidth;
     return requestAnimFrame(() => {
       this.keyFrame = this.getAnimation();
       if (stats.moving) {
-      	this.props.trees.map(tree => {
-          // 11 === tree width
-      		if (this.checkCollision(tree, 11, 16)) {
-      			this.handleCollision({type: 'tree'});
-            this.setThought();
-      		}
-      	});
-      	this.props.jumps.map(jump => {
-          // 40 === jump width
-      		if(this.checkCollision(jump, 40, 9)) {
-      			this.handleCollision({type: 'jump'});
-      		}
-      	});
-        this.props.updateTrees({x: gameWidth, y: gameSpace.clientHeight});
+      	// this.props.trees.map(tree => {
+       //    // 11 === tree width
+      	// 	if (this.checkCollision(tree, 11, 16)) {
+      	// 		this.handleCollision({type: 'tree'});
+       //      this.setThought();
+      	// 	}
+      	// });
+      	// this.props.jumps.map(jump => {
+       //    // 40 === jump width
+      	// 	if(this.checkCollision(jump, 40, 9)) {
+      	// 		this.handleCollision({type: 'jump'});
+      	// 	}
+      	// });
+        this.props.updateTrees({x: window.outerWidth, y: window.outerHeight});
       }
       if (this.state.keydown) {
         this.props.updateGravity(settings.gravity + 1);
@@ -179,6 +177,8 @@ class Game extends Component {
     this.keyUp = document.addEventListener('keyup', this.keyUp.bind(this), false);
     this.keyFrame = this.getAnimation();
     this.setThought(); 
+    const gameSpace = findDOMNode(this.refs.gameWrapper);
+    this.crafty = Crafty.init(window.outerWidth, window.outerHeight, gameSpace);
   }
   componentWillUnmount() {
     document.removeEventListener(this.listener, false);
@@ -191,9 +191,11 @@ class Game extends Component {
     return (
       <div className={StyleSheet.wrapper}
         ref="gameWrapper">
-        <Skier status={skier} ref="skier" />
+        {this.crafty &&
+          <Skier status={skier} ref="skier" handleTree={this.props.handleTree} resetSkier={this.props.resetSkier} />
+        }
         {trees.map((tree, index) => {
-          return <Tree key={`tree-${index}`} coords={tree}/>;
+          return <Tree key={`tree-${index}`} tree={index} coords={tree}/>;
         })}
         {jumps.map((jump, index) => {
           return <Jump key={`jump-${index}`} coords={jump}/>;

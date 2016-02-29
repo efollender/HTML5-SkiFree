@@ -1,9 +1,27 @@
 import React, {Component} from 'react';
 import {toJS} from 'immutable';
+import {findDOMNode} from 'react-dom';
 import classNames from 'classnames';
+import Crafty from 'craftyjs';
 import StyleSheet from './Game.styl';
 
-export default class Skier extends Component {
+export default class Skier extends Component{
+  crafty() {
+    this.el = Crafty.e('Skier, 2D, DOM, Image, Collision')
+              .attr({
+                x: 0, 
+                y: 0, 
+                w: 15, 
+                h: 34})
+              .image(this.getImage())
+              .DOM(findDOMNode(this.refs.skier))
+              .onHit('Tree', () => {
+                //TODO: Change image on hit
+                console.log(this.el, 'hit');
+                this.props.handleTree();
+                setTimeout(this.props.resetSkier, 2000);
+              });
+  }
   getPosition() {
     const skier = this.props.status.toJS();
     switch (skier.position) {
@@ -31,16 +49,15 @@ export default class Skier extends Component {
       return this.getPosition();
     }
   }
+  componentDidMount() {
+    this.crafty();
+  }
   render() {
     const skier = this.props.status.toJS();
     return (
-      <div className={StyleSheet.Skier}>
-        <img className={classNames({
-          down: skier.position === 'down',
-          left: skier.position === 'left',
-          right: skier.position === 'right'
-        })} src={this.getImage()}/>
-      </div>
+      <div className={StyleSheet.Skier} 
+        ref="skier" 
+        style={{backgroundImage: `url(${this.getImage})`}} />
     );
   }
 }
