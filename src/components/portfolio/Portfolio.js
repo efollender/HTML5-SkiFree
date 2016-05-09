@@ -58,7 +58,7 @@ export default class Portfolio extends Component {
           typing: typed === string
         })}>
           {typed}
-          <span className="cursor">|</span>
+          <span className="cursor"/>
         </div>
       </div>
     );

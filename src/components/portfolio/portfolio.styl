@@ -5,11 +5,20 @@
 	width 100%
 	padding 1em
 	.cursor
-		font-weight bold
 		opacity 1
+		position relative
+		&:before
+			content ''
+			display inline-block
+			position absolute
+			top 0
+			right -4px
+			bottom 0
+			width 4px
+			background lime
 	.typing
 		.cursor
-			animation blink .4s ease-in-out infinite
+			animation blink .5s ease-in-out infinite
 
 @keyframes blink
 	from 
