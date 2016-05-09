@@ -10,6 +10,8 @@ import Tree from './Tree';
 import Stats from './Stats';
 import Jump from './Jump';
 import * as actionCreators from '../../action_creators';
+const portfolio = require('../../assets/portfolio.json');
+
 
 window.requestAnimFrame = (function(){
   return  window.requestAnimationFrame       ||
@@ -35,7 +37,8 @@ class Game extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      keydown: false
+      keydown: false,
+      thought: ''
     };
   }
   handleCollision(collision) {
