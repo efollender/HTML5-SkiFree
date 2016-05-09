@@ -23,18 +23,34 @@ export default class Portfolio extends Component {
   setString(string) {
     this.setState({
       string: string,
-      typed: ''
+      typing: false
     });
-    setTimeout(this.type.bind(this), 50);
+    setTimeout(this.erase.bind(this), 50);
   }
   type() {
-    const {typed, string} = this.state;
-    const nextType = string.substr(0, typed.length + 1);
-    this.setState({
-      typed: nextType
-    });
-    if(typed.length < string.length + 1) {
+    const {typed, string, typing} = this.state;
+    if((typed.length < string.length) && typing) {
+      const nextType = string.substr(0, typed.length + 1);
+      this.setState({
+        typed: nextType,
+        typing: true
+      });
       setTimeout(this.type.bind(this), 100);
+    } else {
+      this.erase();
+    }
+  }
+  erase() {
+    const {typed} = this.state;
+    if(typed.length > 0) {
+      const nextType = typed.substr(0, typed.length - 1);
+      this.setState({
+        typed: nextType
+      });
+      setTimeout(this.erase.bind(this), 100);
+    } else {
+      
+      this.type();
     }
   }
   render() {
