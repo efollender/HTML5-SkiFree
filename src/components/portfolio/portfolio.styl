@@ -1,0 +1,18 @@
+:local(.wrapper)
+	background black
+	color lime
+	font-family 'Courier New', monotype
+	width 100%
+	padding 1em
+	.cursor
+		font-weight bold
+		opacity 1
+	.typing
+		.cursor
+			animation blink .4s ease-in-out infinite
+
+@keyframes blink
+	from 
+		opacity 1
+	to
+		opacity 0

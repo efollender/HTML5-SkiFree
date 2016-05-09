@@ -1,7 +1,7 @@
 import axios from 'axios';
-import Firebase from 'firebase';
+import firebase from 'firebase';
 
-const FB_REF = new Firebase('http://xkcdthoughts.firebaseio.com');
+const FB_REF = new firebase('http://xkcdthoughts.firebaseio.com');
 
 export async function getThoughts(cb){
   try {

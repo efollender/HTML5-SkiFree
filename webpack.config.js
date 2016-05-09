@@ -17,6 +17,11 @@ module.exports = {
         loader: 'babel'
       },
       {
+        test: /\.(json)$/,
+        exclude: /node_modules/,
+        loader: 'json'
+      },
+      {
         test: /\.styl$/,
         loader: stylusLoader
       }
