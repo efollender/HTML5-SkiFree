@@ -9,14 +9,11 @@ export default class Stats extends Component {
     altitude: PropTypes.number
   };
   render() {
-    const {moving, altitude, thought} = this.props;
+    const {moving, altitude} = this.props;
     return (
       <div className={StyleSheet.Stats}>
         <p>{ moving ? 'Started!' : 'Paused'}</p>
         <p>Altitude: {altitude}ft</p>
-        {thought &&
-          <p>{thought}</p>
-        }
       </div>
     );
   }

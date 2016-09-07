@@ -56,16 +56,10 @@ export function startGame() {
 	};
 }
 
-export function updateGravity(gravity) {
-	return {
-		type: ui.UPDATE_GRAVITY,
-		gravity: gravity
-	};
-}
-
-export function updateTrees(gameSize) {
+export function updateTrees(gameSize, gravity=1) {
 	return {
 		type: ui.UPDATE_TREES,
-		width: gameSize
+		width: gameSize,
+		gravity: gravity
 	};
 }

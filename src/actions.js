@@ -1,5 +1,4 @@
 import {Map, List, fromJS} from 'immutable';
-import axios from 'axios';
 import * as creators from './action_creators';
 
 //util
@@ -45,9 +44,6 @@ export const INITIAL_STATE = Map({
       moving: false,
       altitude: 15000,
       clock: Date.now()
-    }),
-    settings: Map({
-      gravity: 2
     })
   })
 });
@@ -56,7 +52,8 @@ export function addTree(state, pos) {
   return state.updateIn(['game','trees'], oldTrees => {
     return oldTrees.push(fromJS({
       x: pos.randomX,
-      y: pos.randomY
+      y: pos.randomY,
+      type: 'tree'
     }));
   });
 }
@@ -65,15 +62,14 @@ export function addJump(state, pos) {
   return state.updateIn(['game','jumps'], oldJumps => {
     return oldJumps.push(fromJS({
       x: pos.randomX,
-      y: pos.randomY
+      y: pos.randomY,
+      type: 'jump'
     }));
   });
 }
 
 export function handleJump(state) {
-  const oldGrav = state.getIn(['game', 'settings', 'gravity']);
-  const newState = state.setIn(['game', 'skier', 'state'], 'jump');
-  return newState.setIn(['game', 'settings', 'gravity'], oldGrav * 2);
+  return state.setIn(['game', 'skier', 'state'], 'jump');
 }
 
 export function handleTree(state) {
@@ -102,7 +98,6 @@ export function moveDown(state) {
 export function resetSkier(state) {
   let newState = state.setIn(['game', 'skier', 'state'], 'default');
   newState = newState.setIn(['game', 'stats', 'moving'], true);
-  newState = newState.setIn(['game', 'settings', 'gravity'], 2);
   return newState;
 }
 
@@ -115,13 +110,8 @@ export function startGame(state) {
   });
 }
 
-export function updateGravity(state, gravity) {
-  return state.setIn(['game', 'settings', 'gravity'], gravity);
-}
-
-export function updateTrees(state, gameSize) {
+export function updateTrees(state, gameSize, dec) {
   const xFactor = getX(state);
-  const dec = state.getIn(['game', 'settings', 'gravity']);
   const randomX = size => { return Math.floor(Math.random() * size.x); };
   const updatePositions = oldState => {
     return oldState.map(obj => {
@@ -131,7 +121,8 @@ export function updateTrees(state, gameSize) {
       let newX = (obj.get('y') < 0) ? randomX(gameSize) : obj.get('x') + xFactor;
       return Map({
         x: newX,
-        y: newY
+        y: newY,
+        type: obj.get('type')
       });
     });
   }

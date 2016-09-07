@@ -1,27 +1,27 @@
 :local(.wrapper)
-	background black
-	color lime
-	font-family 'Courier New', monotype
-	width 100%
-	padding 1em
-	.cursor
-		opacity 1
-		position relative
-		&:before
-			content ''
-			display inline-block
-			position absolute
-			top 0
-			right -4px
-			bottom 0
-			width 4px
-			background lime
-	.typing
-		.cursor
-			animation blink .s ease-in-out infinite
-
+  background black
+  color lime
+  font-family 'Courier New', monotype
+  width 100%
+  padding 1em
+  .cursor
+    opacity 1
+    position relative
+    &:before
+      content ''
+      display inline-block
+      position absolute
+      top 0
+      right -4px
+      bottom 0
+      width 4px
+      background lime
+  .typing
+    .cursor
+      animation blink .5s ease-in-out infinite
+      
 @keyframes blink
-	from 
-		opacity 1
-	to
-		opacity 0
+  from 
+    opacity 1
+  to
+    opacity 0

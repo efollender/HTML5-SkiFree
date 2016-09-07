@@ -23,21 +23,18 @@ export default class Portfolio extends Component {
   setString(string) {
     this.setState({
       string: string,
-      typing: false
+      typed: ''
     });
-    setTimeout(this.erase.bind(this), 50);
+    setTimeout(this.type.bind(this), 50);
   }
   type() {
     const {typed, string, typing} = this.state;
-    if((typed.length < string.length) && typing) {
+    if(typed.length < string.length) {
       const nextType = string.substr(0, typed.length + 1);
       this.setState({
-        typed: nextType,
-        typing: true
+        typed: nextType
       });
       setTimeout(this.type.bind(this), 100);
-    } else {
-      this.erase();
     }
   }
   erase() {
@@ -48,9 +45,6 @@ export default class Portfolio extends Component {
         typed: nextType
       });
       setTimeout(this.erase.bind(this), 100);
-    } else {
-      
-      this.type();
     }
   }
   render() {

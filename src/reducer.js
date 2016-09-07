@@ -46,11 +46,8 @@ export default function reducer(state=INITIAL_STATE, action) {
     case ui.START_GAME:
       return startGame(state);
       break;
-    case ui.UPDATE_GRAVITY:
-      return updateGravity(state, action.gravity);
-      break;
     case ui.UPDATE_TREES:
-      return updateTrees(state, action.width);
+      return updateTrees(state, action.width, (action.gravity || 1));
       break;
   }
   return state;

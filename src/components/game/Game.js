@@ -3,7 +3,6 @@ import {shouldPureComponentUpdate} from 'react-pure-render';
 import {List, Map} from 'immutable';
 import {connect} from 'react-redux';
 import {findDOMNode} from 'react-dom';
-import {getThoughts} from '../../utils/firebaseUtils';
 import StyleSheet from './Game.styl';
 import Skier from './Skier';
 import Tree from './Tree';
@@ -26,8 +25,7 @@ const mapStateToProps = state => {
     skier: state.getIn(['game','skier']),
     trees: state.getIn(['game', 'trees']),
     jumps: state.getIn(['game', 'jumps']),
-    stats: state.getIn(['game', 'stats']),
-    settings: state.getIn(['game', 'settings'])
+    stats: state.getIn(['game', 'stats'])
   };
 };
 
@@ -36,8 +34,7 @@ class Game extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      keydown: false,
-      thought: ''
+      keydown: false
     };
   }
   handleCollision(collision) {
@@ -77,7 +74,6 @@ class Game extends Component {
         break;
       case 13:
         this.start();
-        this.setThought();
         break;
       default:
         return false;
@@ -122,54 +118,46 @@ class Game extends Component {
   }
   getAnimation() {
     const stats = this.props.stats.toJS();
-    const settings = this.props.settings.toJS();
     const gameSpace = findDOMNode(this.refs.gameWrapper);
     const gameWidth = gameSpace.firstChild.clientWidth;
     return requestAnimFrame(() => {
       this.keyFrame = this.getAnimation();
       if (stats.moving) {
-      	this.props.trees.map(tree => {
-          // 11 === tree width
-      		if (this.checkCollision(tree, 11, 16)) {
-      			this.handleCollision({type: 'tree'});
-            this.setThought();
+        const objects = this.props.jumps.concat(this.props.trees);
+      	objects.map(object => {
+          let width;
+          let height;
+          if (object.get('type') === 'tree') {
+            width = 11;
+            height = 16;
+          } else if (object.get('type') === 'jump') {
+            width = 40;
+            height = 9;
+          }
+      		if (this.checkCollision(object, width, height)) {
+      			this.handleCollision({type: object.get('type')});
       		}
       	});
-      	this.props.jumps.map(jump => {
-          // 40 === jump width
-      		if(this.checkCollision(jump, 40, 9)) {
-      			this.handleCollision({type: 'jump'});
-      		}
-      	});
-        this.props.updateTrees({x: gameWidth, y: gameSpace.clientHeight});
+        if (this.state.keydown) {
+          this.props.updateTrees({
+            x: gameWidth, 
+            y: gameSpace.clientHeight
+          }, 8);
+        } else {
+          this.props.updateTrees({
+            x: gameWidth, 
+            y: gameSpace.clientHeight
+          }, 4);
+        }
       }
-      if (this.state.keydown) {
-        this.props.updateGravity(settings.gravity + 1);
-      } 
     });
   }
   keyUp() {
-    this.setState({keydown: false});
-    this.props.updateGravity(2);
+    this.setState({
+      keydown: false
+    });
   }
-  setThought() {
-    let randomNum;
-    if(!this.state.thoughts){
-      getThoughts(thoughts => {
-        randomNum = Math.floor(Math.random() * thoughts.length);
-        this.setState({
-          thoughts: thoughts,
-          thought: thoughts[randomNum]
-        });
-      });
-    } else {
-      randomNum = Math.floor(Math.random() * this.state.thoughts.length);
-      this.setState({
-        thought: this.state.thoughts[randomNum]
-      });
-    }
-      
-  }
+  
   componentDidMount() {
     for (let i=0; i < 20; i++){
       this.props.addTree(this.generatePosition());
@@ -180,7 +168,6 @@ class Game extends Component {
     this.listener = document.addEventListener('keydown', this.handleKeydown.bind(this), false);
     this.keyUp = document.addEventListener('keyup', this.keyUp.bind(this), false);
     this.keyFrame = this.getAnimation();
-    this.setThought(); 
   }
   componentWillUnmount() {
     document.removeEventListener(this.listener, false);
@@ -189,7 +176,6 @@ class Game extends Component {
   render() {
     const {trees, skier, jumps, stats} = this.props;
     const moving = stats.toJS().moving;
-    const {thought} = this.state;
     return (
       <div className={StyleSheet.wrapper}
         ref="gameWrapper">
@@ -201,9 +187,6 @@ class Game extends Component {
           return <Jump key={`jump-${index}`} coords={jump}/>;
         })}
         <Stats {...stats.toJS()} />
-        {(thought && !moving) &&
-          <div className="thought-box">{thought}</div>
-        }
       </div>
     );
   }
