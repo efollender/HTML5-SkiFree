@@ -1,0 +1,88 @@
+{
+  "projects": [
+    {
+      "title": "Scarinci Hollenbeck",
+      "date": "2013",
+      "tools": [
+        "Wordpress", 
+        "Foundation"
+      ],
+      "url": "http://www.scarincihollenbeck.com"
+    },
+    {
+      "title": "Doggerel | Arup Engineering Blog",
+      "date": "2015",
+      "tools": [
+        "Wordpress",
+        "Stylus"
+      ],
+      "url": "http://doggerel.arup.com"
+    },
+    {
+      "title": "Alloy Development",
+      "date": "2016",
+      "tools": [
+        "Craft CMS",
+        "React",
+        "Redux",
+        "Stylus",
+        "Webpack"
+      ],
+      "url": "http://www.alloyllc.com"
+    },
+    {
+      "title": "Candy Boys",
+      "date": "2014",
+      "tools": [
+        "Angular",
+        "Sass",
+        "VelocityJS",
+        "Gulp"
+      ],
+      "url": "http://www.candyboysnyc.com"
+    },
+    {
+      "title": "Brooklyn Digital Foundry",
+      "date": "2015",
+      "tools": [
+        "Craft CMS",
+        "React",
+        "Redux",
+        "Stylus",
+        "Webpack"
+      ]
+    },
+    {
+      "title": "Manhattanville Campus | Columbia University",
+      "date": "2016",
+      "tools": [
+        "Drupal",
+        "Stylus",
+        "Webpack"
+      ],
+      "url": "tbd"
+    },
+    {
+      "title": "Spotify app",
+      "date": "2015",
+      "tools": [
+        "React",
+        "Redux",
+        "Stylus",
+        "Webpack",
+        "Raspberry Pi",
+        "NodeJS",
+        "Koa"
+      ]
+    },
+    {
+      "title": "Holiday Cat WebGL Experiment",
+      "date": "2016",
+      "tools": [
+        "Three.js",
+        "Webpack",
+        "Stylus"
+      ]
+    }
+  ]
+}
