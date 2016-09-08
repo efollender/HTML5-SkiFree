@@ -56,10 +56,11 @@ export function startGame() {
 	};
 }
 
-export function updateTrees(gameSize, gravity=1) {
+export function updateTrees(gameSize, gravity=1, action=null) {
 	return {
 		type: ui.UPDATE_TREES,
 		width: gameSize,
-		gravity: gravity
+		gravity: gravity,
+		action: action
 	};
 }

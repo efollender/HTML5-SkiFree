@@ -5,15 +5,6 @@
   text-transform uppercase
   font-weight bold
   font-size .8rem
-  .thought-box
-    position absolute
-    left 35%
-    right 35%
-    background white
-    border 2px solid black
-    bottom 10%
-    padding 1em
-    z-index 10
 :local(.Skier)
   position absolute
   top 50%
@@ -51,3 +42,27 @@
     content ''
     border-top 3px solid blue
     border-bottom 3px solid pink
+:local(.gameIntro)
+  background black
+  color white
+  width 100%
+  font-family Monaco, monospace
+  text-transform uppercase
+  font-weight bold
+  font-size 1.2rem
+  text-align center
+  opacity 1
+  transform opacity .5s ease-out
+  &.fadeOut
+    opacity 0
+  .intro-wrapper
+    position absolute
+    top 50%
+    transform translateY(-50%)
+    left 0
+    right 0
+  a
+    display block
+    margin 1rem 0
+    color white
+    text-decoration none

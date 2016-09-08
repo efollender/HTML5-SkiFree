@@ -22,7 +22,7 @@ module.exports = {
     ],
   },
   output: {
-    path: '/dist/',
+    path: DIST,
     publicPath: PUBLIC_PATH,
     filename: '[name].js',
   },

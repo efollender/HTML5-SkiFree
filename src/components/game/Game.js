@@ -40,12 +40,10 @@ class Game extends Component {
   handleCollision(collision) {
   	switch (collision.type) {
   		case 'jump':
-  			this.props.handleJump();
-        setTimeout(this.props.resetSkier, 1000);
+  			return 'handleJump';
   			break;
   		case 'tree':
-  			this.props.handleTree();
-         setTimeout(this.props.resetSkier, 2000);
+  			return 'handleTree';
   			break;
   		default:
   			return false;
@@ -80,8 +78,7 @@ class Game extends Component {
         break;
     }
   }
-  checkCollision(obj, width, height) {
-    const skier = findDOMNode(this.refs.skier).firstChild;
+  checkCollision(obj, width, height, skier) {
     const x1 = skier.x;
     const w1 = skier.clientWidth;
     const x2 = obj.get('x');
@@ -99,10 +96,7 @@ class Game extends Component {
                   // bottom obj - 1 above top skier
                    ((y2 + h2 - 1) < y1));
 
-    return (overlap && (
-            ((y1 + h1 - 1) === y2)  || 
-            ((x1 + w1 - 1) === x2)  || 
-            ((x2 + w2 - 1) === x1)  ));
+    return overlap;
   }
   generatePosition() {
     const gameSpace = findDOMNode(this.refs.gameWrapper);
@@ -118,37 +112,42 @@ class Game extends Component {
   }
   getAnimation() {
     const stats = this.props.stats.toJS();
+    const skier = this.props.skier.toJS();
     const gameSpace = findDOMNode(this.refs.gameWrapper);
     const gameWidth = gameSpace.firstChild.clientWidth;
+    const DOMskier = findDOMNode(this.refs.skier).firstChild;
     return requestAnimFrame(() => {
       this.keyFrame = this.getAnimation();
+      let action = null;
+      let grav = 4;
       if (stats.moving) {
+        if (skier.state === 'jump'){
+          setTimeout(this.props.resetSkier, 2000);
+        }
         const objects = this.props.jumps.concat(this.props.trees);
       	objects.map(object => {
           let width;
           let height;
           if (object.get('type') === 'tree') {
             width = 11;
-            height = 16;
+            height = 20;
           } else if (object.get('type') === 'jump') {
             width = 40;
             height = 9;
           }
-      		if (this.checkCollision(object, width, height)) {
-      			this.handleCollision({type: object.get('type')});
+      		if (this.checkCollision(object, width, height, DOMskier)) {
+      			action = this.handleCollision({type: object.get('type')});
       		}
       	});
         if (this.state.keydown) {
-          this.props.updateTrees({
+          grav = 8;
+        } 
+        this.props.updateTrees({
             x: gameWidth, 
             y: gameSpace.clientHeight
-          }, 8);
-        } else {
-          this.props.updateTrees({
-            x: gameWidth, 
-            y: gameSpace.clientHeight
-          }, 4);
-        }
+          }, grav, action);
+      } else if (skier.state === 'dead'){
+        setTimeout(this.props.resetSkier, 1000);
       }
     });
   }

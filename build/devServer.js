@@ -17,7 +17,6 @@ app.use(require('webpack-dev-middleware')(compiler, {
   publicPath: config.output.publicPath,
   contentBase: __dirname + '/dist/index.html'
 }));
-console.log(config.output.publicPath);
 app.use(require('webpack-hot-middleware')(compiler));
 app.use(express.static('dist'));
 app.get('*', function (request, response){

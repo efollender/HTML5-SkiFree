@@ -7,5 +7,5 @@ const createStoreWithMiddleware = applyMiddleware(
 	thunk
 	)(createStore);
 
-export const store = createStore(reducer);
+export default createStore(reducer, window.devToolsExtension ? window.devToolsExtension() : f => f);
 

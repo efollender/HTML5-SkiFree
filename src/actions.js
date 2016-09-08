@@ -110,7 +110,7 @@ export function startGame(state) {
   });
 }
 
-export function updateTrees(state, gameSize, dec) {
+export function updateTrees(state, gameSize, dec, action=null) {
   const xFactor = getX(state);
   const randomX = size => { return Math.floor(Math.random() * size.x); };
   const updatePositions = oldState => {
@@ -129,5 +129,13 @@ export function updateTrees(state, gameSize, dec) {
   const trees = state.updateIn(['game', 'trees'], updatePositions);
   const jumps = trees.updateIn(['game', 'jumps'], updatePositions);
   const oldAlt = state.getIn(['game', 'stats', 'altitude']);
-  return jumps.setIn(['game', 'stats', 'altitude'], oldAlt - dec);
+  const finalState = jumps.setIn(['game', 'stats', 'altitude'], oldAlt - dec);
+  if (action === 'handleJump') {
+    return handleJump(finalState);
+  } else if (action === 'handleTree') {
+    return handleTree(finalState);
+  } else {
+    return finalState;
+  }
+  
 }
